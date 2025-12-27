@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: football-club-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      # Point to the local mongo container service
+      - MONGODB_URI=mongodb://mongo:27017/football-club
+    env_file:
+      - .env.local
+    depends_on:
+      - mongo
+
+  mongo:
+    container_name: football-club-mongo
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
